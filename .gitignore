@@ -1,0 +1,21 @@
+# VS Code local history
+.history/
+
+# Copilot workspace instructions (maintainer-specific)
+.github/copilot-instructions.md
+
+# Anthropic source (cloned separately, tracked via commit hash in agent files)
+anthropic-plugins/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+
+# Editor files
+*.swp
+*.swo
+*~

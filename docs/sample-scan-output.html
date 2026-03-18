@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Security Council Scan — Sample Output</title>
+<style>
+body { margin: 0; padding: 0; background: #1e1e1e; }
+.term {
+  font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #d4d4d4;
+  background: #1e1e1e;
+  padding: 20px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.cyan { color: #4ec9b0; }
+.yellow { color: #dcdcaa; }
+.green { color: #6a9955; }
+.red { color: #f44747; }
+.orange { color: #ce9178; }
+.blue { color: #569cd6; }
+.white { color: #ffffff; font-weight: bold; }
+.dim { color: #808080; }
+.bold { font-weight: bold; }
+
+table { border-collapse: collapse; margin: 8px 0; width: 100%; }
+th, td { padding: 4px 16px 4px 0; text-align: left; white-space: nowrap; }
+th { color: #808080; border-bottom: 1px solid #444; }
+td { border-bottom: 1px solid #333; }
+
+.crit { color: #f44747; }
+.high { color: #ce9178; }
+.med { color: #dcdcaa; }
+
+.bar { border-top: 1px solid #444; margin-top: 16px; padding-top: 8px; display: flex; justify-content: space-between; }
+.bar-left { color: #808080; }
+.bar-right { color: #4ec9b0; }
+</style>
+</head>
+<body>
+<div class="term">
+<span class="cyan bold">🛡️ Security Council Scan — sample-webapp</span>
+<br><br>
+<span class="white">Posture: MODERATE RISK</span> <span class="dim">|</span> <span class="yellow">13 findings</span> <span class="dim">|</span> <span class="orange">2 attack chains</span>
+<br><br>
+<span class="white bold">Priority Findings</span>
+<br>
+<table>
+<tr><th>ID</th><th>Severity</th><th>Confidence</th><th>Finding</th><th>Component</th></tr>
+<tr><td class="dim">A01</td><td><span class="crit">🔴 CRITICAL</span></td><td>0.95</td><td>No authentication on Express API — all 30+ endpoints open</td><td class="dim">api-server</td></tr>
+<tr><td class="dim">A02</td><td><span class="high">🟠 HIGH</span></td><td>0.92</td><td>PAT &amp; GitHub token stored as <span class="white">plaintext files</span> on disk</td><td class="dim">api-server</td></tr>
+<tr><td class="dim">A03</td><td><span class="high">🟠 HIGH</span></td><td>0.88</td><td>AI chat endpoint has full <span class="white">write access</span> (prompt injection risk)</td><td class="dim">api-server</td></tr>
+<tr><td class="dim">C01</td><td><span class="high">🟠 HIGH</span></td><td>0.85</td><td>Trust boundary violation: untrusted AI as write proxy</td><td class="dim">api-server</td></tr>
+<tr><td class="dim">C02</td><td><span class="high">🟠 HIGH</span></td><td>0.90</td><td>Project data (titles, users, risks) exposed without auth</td><td class="dim">api-server</td></tr>
+<tr><td class="dim">A04</td><td><span class="med">🟡 MEDIUM</span></td><td>0.65</td><td><span class="blue">Invoke-Expression</span> with dynamic vars (7+ PS scripts)</td><td class="dim">build-scripts</td></tr>
+<tr><td class="dim">C05</td><td><span class="med">🟡 MEDIUM</span></td><td>0.70</td><td>Playwright shares user's <span class="white">real SSO session</span> for URL navigation</td><td class="dim">web-scraper</td></tr>
+<tr><td class="dim">B04</td><td><span class="med">🟡 MEDIUM</span></td><td>0.75</td><td>No rate limiting on any endpoint</td><td class="dim">api-server</td></tr>
+<tr><td class="dim">A06</td><td><span class="med">🟡 MEDIUM</span></td><td>0.60</td><td>MSAL token cache with <span class="white">default file permissions</span></td><td class="dim">auth-module</td></tr>
+</table>
+
+<br>
+<span class="white bold">⛓️ Attack Chains</span>
+<br><br>
+<span class="dim">1.</span> <span class="orange">Credential Theft → API Compromise:</span> Unauthenticated API → read/replace stored PAT → exfiltrate all work items
+<br>
+<span class="dim">2.</span> <span class="orange">Prompt Injection → Data Write:</span> Unauthenticated chat → inject prompt → AI calls createWorkItem/updateWorkItem
+<br><br>
+<span class="white bold">Top Recommendations</span>
+<br><br>
+<span class="dim">1.</span> Add <span class="green">authentication middleware</span> to the Express server (session or Bearer token)
+<br>
+<span class="dim">2.</span> Use <span class="green">OS credential storage</span> (Windows Credential Manager) instead of plaintext files
+<br>
+<span class="dim">3.</span> <span class="green">Separate read/write tools</span> in AI chat — require human approval for write ops
+<br>
+<span class="dim">4.</span> <span class="green">URL allowlist</span> for web scraper (*.example.com only)
+<br><br>
+<span class="dim">Full findings saved to session. Say <span class="white">"generate report"</span> to produce a polished HTML report.</span>
+
+<div class="bar">
+<span class="bar-left">~/projects/sample-webapp [main]</span>
+<span class="bar-right">security-council</span>
+</div>
+</div>
+</body>
+</html>

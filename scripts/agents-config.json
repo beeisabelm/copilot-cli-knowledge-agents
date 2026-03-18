@@ -1,0 +1,77 @@
+{
+  "_comment": "Configuration for Sync-Agents.ps1 - defines which plugins to convert to Copilot CLI agents",
+  "_version": "1.1.0",
+  "_updated": "2026-03-18",
+  
+  "sourcePath": "../anthropic-plugins",
+  "outputPath": "../.github/agents",
+  
+  "agents": [
+    {
+      "plugin": "product-management",
+      "enabled": true,
+      "notes": "PM workflows: specs, roadmaps, stakeholder updates"
+    },
+    {
+      "plugin": "engineering",
+      "enabled": true,
+      "notes": "Engineering workflows: code review, architecture, incidents"
+    },
+    {
+      "plugin": "data",
+      "enabled": true,
+      "notes": "Data analysis and SQL workflows"
+    },
+    {
+      "plugin": "customer-support",
+      "enabled": true,
+      "notes": "Support ticket handling and escalation"
+    },
+    {
+      "plugin": "design",
+      "enabled": true,
+      "notes": "Design specs, feedback, and critiques"
+    },
+    {
+      "plugin": "finance",
+      "enabled": true,
+      "notes": "Financial analysis and reporting"
+    },
+    {
+      "plugin": "legal",
+      "enabled": true,
+      "notes": "Contract review and legal analysis"
+    },
+    {
+      "plugin": "marketing",
+      "enabled": true,
+      "notes": "Marketing content and campaign planning"
+    },
+    {
+      "plugin": "operations",
+      "enabled": true,
+      "notes": "Operations and process workflows"
+    },
+    {
+      "plugin": "sales",
+      "enabled": true,
+      "notes": "Sales outreach and account management"
+    },
+    {
+      "plugin": "productivity",
+      "enabled": true,
+      "notes": "General productivity: emails, meetings, todos"
+    },
+    {
+      "plugin": "human-resources",
+      "enabled": true,
+      "notes": "HR workflows: recruiting, onboarding, performance reviews"
+    },
+    {
+      "plugin": "security",
+      "enabled": true,
+      "type": "extension",
+      "notes": "Security council: 3-persona scan (Attacker/Auditor/Architect) with adversarial debate. Extension-based (not Anthropic-ported)."
+    }
+  ]
+}

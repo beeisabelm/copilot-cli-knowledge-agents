@@ -1,0 +1,49 @@
+{
+  "_comment": "Security council configuration. Edit models, checklists, and detection rules here — no need to touch extension.mjs.",
+  "_version": "1.0.0",
+
+  "models": {
+    "primary": [
+      { "id": "claude-opus-4.6", "shortName": "opus", "strengths": "Deep security reasoning, subtle races, architectural analysis" },
+      { "id": "gemini-3-pro-preview", "shortName": "gemini", "strengths": "Design-level reasoning, infrastructure, threat modeling" },
+      { "id": "gpt-5.2-codex", "shortName": "codex", "strengths": "Cross-file analysis, code patterns, compliance checking" }
+    ],
+    "crossReview": [
+      { "id": "gpt-5.4", "shortName": "gpt54", "strengths": "Adversarial reasoning, debate, cross-review" }
+    ],
+    "reserve": [
+      { "id": "claude-sonnet-4.6", "shortName": "sonnet46", "strengths": "Fast security analysis, low false positive rate" },
+      { "id": "claude-sonnet-4.5", "shortName": "sonnet45", "strengths": "Thorough state analysis, frontend security" },
+      { "id": "gpt-5.1-codex", "shortName": "codex51", "strengths": "Pattern detection, broad coverage" }
+    ]
+  },
+
+  "checklistDetection": {
+    "dotnet-api": {
+      "file": "checklists/dotnet-api.md",
+      "triggers": [".csproj", "asp.net", "c#", ".net", "csharp"]
+    },
+    "frontend-js": {
+      "file": "checklists/frontend-js.md",
+      "triggers": ["package.json", "react", "typescript", "javascript", "vue", "angular", ".tsx"]
+    },
+    "data-pipeline": {
+      "file": "checklists/data-pipeline.md",
+      "triggers": ["spark", "databricks", "synapse", "hdinsight", "pipeline"]
+    },
+    "iac": {
+      "file": "checklists/iac.md",
+      "triggers": [".bicep", "arm", "terraform", ".tf", "yaml pipeline"]
+    },
+    "general": {
+      "file": "checklists/general.md",
+      "triggers": []
+    }
+  },
+
+  "scanTriggers": [
+    "council", "red team", "agentic", "security scan", "run scan",
+    "next round", "convergence", "show findings", "fix findings",
+    "generate report", "moe"
+  ]
+}
