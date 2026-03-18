@@ -1,4 +1,5 @@
 name: Refresh Security Checklists
+# Runs monthly to check for OWASP/CWE updates and creates a PR if sources changed.
 on:
   schedule:
     - cron: '0 0 1 * *'  # First of each month
