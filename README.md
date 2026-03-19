@@ -85,20 +85,30 @@ stakeholder-update for executives on Q2 product launch progress
 
 ---
 
-## Security Agent (Full Extension)
+## Security Agent (Full Extension) - NEW!!
 
 The `security` agent differs from the other 12 — it's an original **extension-based agent** with runtime tools, in-memory state tracking, and adversarial debate.
 
 ![Security Council Scan — sample output](docs/sample-scan-output.png)
 
-### Why It's Different
+### How It Works
 
-- **3 AI personas** (Attacker/Auditor/Architect) scan independently
-- **Adversarial cross-review** challenges every finding
+Four AI models review your code — each with a different job:
+
+1. **Model A** (e.g., Claude) plays **The Attacker** — finds exploit paths. *"Can I steal credentials? Chain two small bugs into a big one?"*
+2. **Model B** (e.g., Gemini) plays **The Auditor** — checks compliance. *"Does this meet OWASP Top 10? Is every endpoint authorized?"*
+3. **Model C** (e.g., GPT) plays **The Architect** — evaluates design. *"If this one service is compromised, what else can the attacker reach?"*
+4. **Model D** (different from all three) plays **The Challenger** — reviews every finding and pushes back. *"Prove it. Show me the exact line. What compensating control did you miss?"*
+
+What survives the debate is what you see. Each finding comes with a confidence score, the exact file and line, and which models independently flagged it.
+
+### What You Get
+
+- **Fewer false positives** — built-in FP reduction tuned from real-world scan feedback
 - **Finding state tracking** — confirm, downgrade, or reject issues across rounds
 - **7 runtime tools** for model rotation, HTML report generation, and finding management
 - **Editable checklists** — add or modify `.md` files in `checklists/` without touching code
-- **Built-in false-positive reduction** tuned from real-world feedback
+- **Self-contained HTML reports** you can share with leadership
 
 ### Prerequisites
 
