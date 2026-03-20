@@ -534,8 +534,19 @@ const session = await joinSession({
                 if (findings.has(args.id)) {
                     return `⚠️ Finding '${args.id}' already exists. Use a different ID or rta_mark to update status.`;
                 }
+                // Quality gate: warn on findings missing key quality indicators
+                const qualityIssues = [];
+                if (!args.filePath) qualityIssues.push("no file path");
+                if (!args.exploitScenario && !args.description) qualityIssues.push("no exploit scenario or description");
+                if (!args.suggestedFix) qualityIssues.push("no suggested fix");
+                if ((args.confidence ?? 0.5) < 0.3 && (args.severity === "CRITICAL" || args.severity === "HIGH")) {
+                    qualityIssues.push("low confidence for CRITICAL/HIGH — consider downgrading severity");
+                }
+                const qualityWarning = qualityIssues.length > 0
+                    ? `\n⚠️ Quality gaps: ${qualityIssues.join(", ")}. Findings with more detail survive cross-review better.`
+                    : "";
                 addFinding({ ...args, status: "pending", convergent: args.convergent || false, confidence: args.confidence ?? 0.5, agents: args.agents || [] });
-                return `✅ Recorded ${args.id}: ${args.title} (${args.severity}, confidence: ${(args.confidence ?? 0.5).toFixed(2)})`;
+                return `✅ Recorded ${args.id}: ${args.title} (${args.severity}, confidence: ${(args.confidence ?? 0.5).toFixed(2)})${qualityWarning}`;
             },
         },
         {

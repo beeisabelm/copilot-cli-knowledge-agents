@@ -26,6 +26,24 @@ What was missed? Attack chains combining findings from multiple agents? Vulnerab
 ## Step 5: Deduplicate and Merge
 Consolidate overlapping findings. Note which agents independently identified each: [Agents: A, B] = higher confidence.
 
+## Step 6: Finding Quality Score (FQS)
+Before including any finding in the final set, score it on these 5 dimensions (1 point each):
+
+| Dimension | 1 Point | 0 Points |
+|-----------|---------|----------|
+| **Specific Location** | Cites exact file + line numbers | Vague ("somewhere in the codebase") |
+| **Exploit Path** | Step-by-step attack scenario | "Could be dangerous" without specifics |
+| **Evidence** | Points to actual code constructs | Theoretical concern only |
+| **Impact Calibration** | Severity matches real-world exploitability | Over-inflated or generic severity |
+| **Actionable Fix** | Specific code change or config fix | "Review and fix" without guidance |
+
+**Quality Gates:**
+- **FQS 5**: Include in report — high-quality finding
+- **FQS 4**: Include with "needs verification" note
+- **FQS 3**: Downgrade severity by one level, include as advisory
+- **FQS 1-2**: Reject — insufficient quality to be actionable
+- When FQS ≥ 3 is rejected, flag for human review with justification
+
 ## Debate Protocol (Critical/High Only)
 For Critical/High findings, produce a Challenge Brief:
 - Your strongest argument AGAINST the finding

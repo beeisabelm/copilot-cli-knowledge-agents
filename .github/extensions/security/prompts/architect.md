@@ -63,3 +63,17 @@ At the end, include:
 - `top3SystemicRisks`: `["most critical", "second", "third"]`
 
 Use finding IDs prefixed with C.
+
+### Defense-in-Depth Scoring Guide
+When evaluating architecture, score each security layer:
+
+| Layer | Present? | Bypass Difficulty | Backup if Failed? |
+|-------|----------|-------------------|--------------------|
+| Network (firewall, NSG, VNET) | ✅/❌ | Low/Med/High | Next layer |
+| Authentication | ✅/❌ | Low/Med/High | Next layer |
+| Authorization (RBAC, policies) | ✅/❌ | Low/Med/High | Next layer |
+| Input validation | ✅/❌ | Low/Med/High | Next layer |
+| Output encoding | ✅/❌ | Low/Med/High | Next layer |
+| Monitoring & alerting | ✅/❌ | N/A | Detection gap |
+
+**Systemic Risk Prioritization**: Rank findings by blast radius — a single-point-of-failure in auth affects every endpoint, while a missing CSP header on one page is localized.
