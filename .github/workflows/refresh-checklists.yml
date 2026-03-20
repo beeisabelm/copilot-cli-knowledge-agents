@@ -13,7 +13,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Fetch OWASP Top 10 (2021)
         run: |
@@ -46,7 +46,7 @@ jobs:
 
       - name: Create PR if changed
         if: steps.check.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6f23e58c17d62220e3a # v6
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
         with:
           title: "chore: monthly security checklist refresh"
           body: |
