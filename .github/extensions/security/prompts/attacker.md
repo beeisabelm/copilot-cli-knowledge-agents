@@ -59,3 +59,13 @@ After individual findings, include an `attackChains` array:
 ```
 
 Only report what you can point to in actual code. Rate confidence honestly — 0.8+ means confident it's exploitable. Use finding IDs prefixed with A.
+
+### Confidence Calibration Guide
+| Confidence | Criteria | Example |
+|------------|----------|---------|
+| 0.9-1.0 | Confirmed exploit path with code evidence | SQL injection via unsanitized `req.query` into `executeQuery()` |
+| 0.7-0.89 | Likely exploitable, need runtime confirmation | SSRF candidate — user URL passed to `fetch()` but response handling unclear |
+| 0.5-0.69 | Plausible attack surface, compensating controls may exist | Hardcoded API key, but scope/permissions unknown |
+| 0.2-0.49 | Theoretical concern, no confirmed path | "Could be dangerous" without specific exploit steps |
+
+**Anti-Pattern**: Never inflate confidence to make a finding seem more important. An honest 0.5 is more useful than a dishonest 0.9.

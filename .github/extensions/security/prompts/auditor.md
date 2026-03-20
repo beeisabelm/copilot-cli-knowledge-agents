@@ -72,3 +72,12 @@ At the end, include a `coverageSummary` object:
 ```
 
 Use finding IDs prefixed with B. Be exhaustive. When you find no issues in a category, state "No issues found in [category]".
+
+### Severity Calibration
+Match severity to real-world exploitability, not just deviation from a standard:
+- **CRITICAL**: Active exploitation path exists, no authentication/authorization barrier
+- **HIGH**: Exploitable with moderate effort, or grants significant access
+- **MEDIUM**: Requires specific conditions or chained with other issues
+- **LOW**: Best practice deviation, defense-in-depth improvement, or informational
+
+**Anti-Pattern**: Do not rate every deviation as HIGH. A missing `HttpOnly` flag on a non-session cookie is LOW, not HIGH.
