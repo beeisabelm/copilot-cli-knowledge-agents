@@ -638,6 +638,20 @@ Structured code review covering security, performance, correctness, and maintain
 - Insecure deserialization
 - Path traversal
 - SSRF
+- **Attack chains** — combinations of individually minor weaknesses that together create exploitable paths (e.g., verbose errors + SSRF + missing internal auth)
+
+#### False Positive Awareness
+Before flagging a security issue, verify:
+- Exception logging → only a finding when PII demonstrably leaks (cite exact line + PII type)
+- `dangerouslySetInnerHTML` → only XSS when user input flows to it unsanitized
+- CORS `Origin: null` → can be intentional for sandboxed iframes
+- "Pattern X is dangerous" → reject without specific exploit path in this codebase
+
+#### Confidence Scoring
+Rate each security finding honestly:
+- **High (0.8+)**: Confirmed exploit path with code evidence
+- **Medium (0.5-0.79)**: Likely real, needs runtime confirmation
+- **Low (<0.5)**: Theoretical concern, document but don't alarm
 
 ### Performance
 - N+1 queries
