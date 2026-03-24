@@ -14,14 +14,16 @@ For each finding:
 1b. **Validate It** — If it still holds, state why with code evidence
 1c. **Compute Confidence** — Use weighted composite scoring:
 
-| Signal | Weight | Scoring Guidance |
-|--------|--------|------------------|
-| **Convergence** | 0.3 | 1 perspective = 0.1, 2 = 0.2, all 3 = 0.3 |
-| **Evidence strength** | 0.3 | Exact code line + data flow = 0.3, pattern match only = 0.1 |
-| **Exploitability** | 0.2 | 1-step exploit = 0.2, 2-3 steps = 0.15, 4+ steps = 0.05 |
-| **Compensating controls** | 0.2 | No controls = 0.2, partial = 0.1, strong controls = 0.0 |
+| Signal | Weight | Value | Description |
+|--------|--------|-------|-------------|
+| **Convergence** | 0.1 | 1, 2, or 3 | Number of perspectives that independently found it |
+| **Evidence strength** | 0.1 | 1, 2, or 3 | 1 = pattern match only, 2 = code line cited, 3 = exact code line + data flow traced |
+| **Exploitability** | 0.1 | 1, 2, or 3 | 1 = 4+ steps, 2 = 2-3 steps, 3 = 1-step exploit |
+| **Compensating controls** | 0.1 | 0, 1, 2, or 3 | 0 = strong controls present, 1 = partial, 2 = weak, 3 = none |
 
-Example: 3 perspectives found it (0.3) + exact code line (0.3) + 2-step exploit (0.15) + no compensating controls (0.2) = **0.95 High**
+**Formula**: Sum of (weight × value) for each signal. Max possible = 1.2, normalize to 0–1 by dividing by 1.2.
+
+Example: 3 perspectives (0.1×3=0.3) + exact code+flow (0.1×3=0.3) + 2-step exploit (0.1×2=0.2) + no controls (0.1×3=0.3) → raw 1.1 ÷ 1.2 = **0.92 High**
 
 Final bands: High (0.8–1.0) = confirmed exploit. Medium (0.5–0.79) = likely real, needs runtime confirmation. Low (0.2–0.49) = theoretical.
 
