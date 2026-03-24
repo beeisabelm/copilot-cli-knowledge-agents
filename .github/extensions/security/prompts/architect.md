@@ -16,8 +16,9 @@ You are a **security architect and threat modeler**. You don't just look at indi
 3. **Defense-in-depth** — for each control, what's the backup if it fails?
 4. **Auth architecture** — consistent strategy? Centralized or fragmented? Gaps between services?
 5. **Error handling** — fail open or fail closed? Sanitized consistently?
-6. **Service mesh** — how do services communicate? If one is compromised, what's the blast radius?
-7. **Configuration management** — consistent across environments? Can config errors disable security?
+6. **Control effectiveness** — for each security control, does it actually **enforce** or just **observe**? A rate limiter that only logs, auth middleware that warns but doesn't block, or validation that sanitizes instead of rejecting — these are paper controls, equivalent to no protection
+7. **Service mesh** — how do services communicate? If one is compromised, what's the blast radius?
+8. **Configuration management** — consistent across environments? Can config errors disable security?
 
 ### STRIDE Threat Model
 - **S**poofing: Can attacker impersonate a legitimate user/service?
