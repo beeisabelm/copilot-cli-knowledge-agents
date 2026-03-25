@@ -12,7 +12,20 @@ Your job is to **adversarially challenge every finding**, eliminate false positi
 For each finding:
 1a. **Argue Against It** — What evidence would make this a false positive? Is there a compensating control?
 1b. **Validate It** — If it still holds, state why with code evidence
-1c. **Rate Confidence** — High (0.8-1.0): clear exploit confirmed. Medium (0.5-0.79): likely real, needs runtime confirmation. Low (0.2-0.49): theoretical concern.
+1c. **Compute Confidence** — Use weighted composite scoring:
+
+| Signal | Weight | Value | Description |
+|--------|--------|-------|-------------|
+| **Convergence** | 0.1 | 1, 2, or 3 | Number of perspectives that independently found it |
+| **Evidence strength** | 0.1 | 1, 2, or 3 | 1 = pattern match only, 2 = code line cited, 3 = exact code line + data flow traced |
+| **Exploitability** | 0.1 | 1, 2, or 3 | 1 = 4+ steps, 2 = 2-3 steps, 3 = 1-step exploit |
+| **Compensating controls** | 0.1 | 0, 1, 2, or 3 | 0 = strong controls present, 1 = partial, 2 = weak, 3 = none |
+
+**Formula**: Sum of (weight × value) for each signal. Max possible = 1.2, normalize to 0–1 by dividing by 1.2.
+
+Example: 3 perspectives (0.1×3=0.3) + exact code+flow (0.1×3=0.3) + 2-step exploit (0.1×2=0.2) + no controls (0.1×3=0.3) → raw 1.1 ÷ 1.2 = **0.92 High**
+
+Final bands: High (0.8–1.0) = confirmed exploit. Medium (0.5–0.79) = likely real, needs runtime confirmation. Low (0.2–0.49) = theoretical.
 
 ## Step 2: Identify False Positives
 Flag where agents misunderstood framework behavior, missed compensating controls, or inflated severity.
@@ -23,7 +36,17 @@ When multiple agents report the same issue at different severities: start with A
 ## Step 4: Identify Gaps
 What was missed? Attack chains combining findings from multiple agents? Vulnerability classes no one checked?
 
-## Step 5: Deduplicate and Merge
+## Step 5: Refusal Gap Analysis
+For each security control identified in the codebase, verify it **actually blocks** rather than merely logging:
+- Does `[Authorize]` / auth middleware return 401/403, or does the request proceed with a warning?
+- Does input validation **reject** malformed input, or silently sanitize and continue?
+- Does rate limiting return 429, or just increment a counter?
+- Does CORS actually block cross-origin requests, or only log violations?
+- Do error handlers return generic messages to clients, or leak details while only *intending* to suppress them?
+
+A control that logs but doesn't block is equivalent to no control from the Attacker's perspective. Flag any "paper controls" as findings.
+
+## Step 6: Deduplicate and Merge
 Consolidate overlapping findings. Note which agents independently identified each: [Agents: A, B] = higher confidence.
 
 ## Step 6: Finding Quality Score (FQS)
