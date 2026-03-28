@@ -1,4 +1,4 @@
-# Copilot CLI Knowledge Agents — Validation Script
+# Copilot CLI Knowledge Agents - Validation Script
 # Checks that all config references point to real files and reports issues.
 #
 # Usage:
@@ -12,12 +12,12 @@ param()
 
 $ErrorActionPreference = "Stop"
 
-# ─── Config ──────────────────────────────────────────────────────────────────
+# --- Config ------------------------------------------------------------------
 
 $ExtensionRoot = Join-Path $PSScriptRoot ".github\extensions\security"
 $ConfigPath = Join-Path $ExtensionRoot "config.json"
 
-# ─── Collect all issues ──────────────────────────────────────────────────────
+# --- Collect all issues ------------------------------------------------------
 
 $errors = @()
 $warnings = @()
@@ -29,23 +29,23 @@ function Add-Check {
         $script:passed++
         Write-Verbose "  [PASS] $Name"
     } else {
-        $script:errors += "  [FAIL] $Name — $Detail"
+        $script:errors += "  [FAIL] $Name - $Detail"
     }
 }
 
 function Add-Warning {
     param([string]$Name, [string]$Detail)
-    $script:warnings += "  [WARN] $Name — $Detail"
+    $script:warnings += "  [WARN] $Name - $Detail"
 }
 
-# ─── Check 1: config.json exists and is valid JSON ──────────────────────────
+# --- Check 1: config.json exists and is valid JSON --------------------------
 
 Write-Host "Validating config.json..." -ForegroundColor Cyan
 
 Add-Check -Name "config.json exists" -Ok (Test-Path $ConfigPath) -Detail "Expected at: $ConfigPath"
 
 if (-not (Test-Path $ConfigPath)) {
-    Write-Host "`n Cannot continue — config.json not found." -ForegroundColor Red
+    Write-Host "`n Cannot continue - config.json not found." -ForegroundColor Red
     exit 1
 }
 
@@ -55,11 +55,11 @@ try {
     Add-Check -Name "config.json is valid JSON" -Ok $true -Detail ""
 } catch {
     Add-Check -Name "config.json is valid JSON" -Ok $false -Detail $_.Exception.Message
-    Write-Host "`n Cannot continue — config.json has invalid JSON." -ForegroundColor Red
+    Write-Host "`n Cannot continue - config.json has invalid JSON." -ForegroundColor Red
     exit 1
 }
 
-# ─── Check 2: All checklist files exist ─────────────────────────────────────
+# --- Check 2: All checklist files exist -------------------------------------
 
 Write-Host "Validating checklist files..." -ForegroundColor Cyan
 
@@ -81,19 +81,19 @@ if ($null -eq $checklistDetection) {
                 $lineCount = 0
             }
             if ($lineCount -lt 3) {
-                Add-Warning -Name "Checklist '$key'" -Detail "Only $lineCount lines — may be incomplete"
+                Add-Warning -Name "Checklist '$key'" -Detail "Only $lineCount lines - may be incomplete"
             }
         }
 
         # Check triggers are defined (except general which has none)
         $triggers = $prop.Value.triggers
         if ($key -ne "general" -and ($null -eq $triggers -or $triggers.Count -eq 0)) {
-            Add-Warning -Name "Checklist '$key' triggers" -Detail "No trigger keywords defined — won't auto-detect"
+            Add-Warning -Name "Checklist '$key' triggers" -Detail "No trigger keywords defined - won't auto-detect"
         }
     }
 }
 
-# ─── Check 3: All prompt files exist ────────────────────────────────────────
+# --- Check 3: All prompt files exist ----------------------------------------
 
 Write-Host "Validating prompt files..." -ForegroundColor Cyan
 
@@ -110,14 +110,14 @@ foreach ($prompt in $promptDetection) {
             $lineCount = 0
         }
         if ($lineCount -lt 10) {
-            Add-Warning -Name "Prompt '$prompt'" -Detail "Only $lineCount lines — may be incomplete"
+            Add-Warning -Name "Prompt '$prompt'" -Detail "Only $lineCount lines - may be incomplete"
         }
     } else {
         Add-Check -Name "Prompt '$prompt' file exists" -Ok $false -Detail "Missing: $filePath"
     }
 }
 
-# ─── Check 4: No duplicate trigger keywords across checklists ───────────────
+# --- Check 4: No duplicate trigger keywords across checklists ---------------
 
 Write-Host "Checking for duplicate triggers..." -ForegroundColor Cyan
 
@@ -135,17 +135,17 @@ foreach ($prop in $checklistDetection.PSObject.Properties) {
     }
 }
 
-# ─── Check 5: extension.mjs exists ──────────────────────────────────────────
+# --- Check 5: extension.mjs exists ------------------------------------------
 
 Write-Host "Validating extension..." -ForegroundColor Cyan
 
 $extensionPath = Join-Path $ExtensionRoot "extension.mjs"
 Add-Check -Name "extension.mjs exists" -Ok (Test-Path $extensionPath) -Detail "Missing: $extensionPath"
 
-# ─── Report ──────────────────────────────────────────────────────────────────
+# --- Report ------------------------------------------------------------------
 
 Write-Host ""
-Write-Host "━━━ Validation Report ━━━" -ForegroundColor White
+Write-Host "--- Validation Report ---" -ForegroundColor White
 
 if ($passed -gt 0) {
     Write-Host "  [PASS] $passed checks passed" -ForegroundColor Green
