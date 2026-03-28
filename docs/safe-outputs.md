@@ -64,15 +64,67 @@ That's what goes in "Blocked."
 
 ## Engineering Agent
 
-<!-- YOUR CONTENT HERE -->
+```
+Agent: engineering
+
+Allowed:
+  - Read and search code, logs, and documentation
+  - Suggest code changes and architectural recommendations
+  - Perform and write analyses such as code reviews
+  - Summarize and help prepare for standup meetings
+
+Gated (requires user confirmation):
+  - Create tickets or tasks for a project
+  - Escalate an incident
+  - Engage in external correspondence (sending messages)
+
+Blocked:
+  - Push or approve code changes
+  - Execute commands automatically
+  - Modify project resources or security controls
+```
 
 ## Data Agent
 
-<!-- YOUR CONTENT HERE -->
+```
+Agent: data
+
+Allowed:
+  - Read and query databases
+  - Perform data visualization and analysis
+  - Validate or write queries to run
+
+Gated (requires user confirmation):
+  - Execute queries that could incur compute costs or cause slowdowns (large datasets)
+  - Queries involving PII data
+
+Blocked:
+  - Any modifying or destructive operations (e.g., write, update, delete)
+  - Create or modify database schemas
+
+```
 
 ## Legal Agent
 
-<!-- YOUR CONTENT HERE -->
+```
+Agent: legal
+
+Allowed:
+  - Read and analyze legal documents
+  - Draft documents or responses for human review
+  - Classify NDAs with reasoning
+  - Review documents against organization playbook
+
+Gated (requires user confirmation):
+  - Engage in external correspondence (sending messages)
+  - Generate or send a signature request
+
+Blocked:
+  - Access or disclose confidential information outside the intended workflow
+  - Approve or refuse any document or contract on behalf of the organization
+  - Provide definitive legal advice (agent does not replace qualified legal professionals)
+
+```
 
 ---
 
@@ -81,9 +133,9 @@ That's what goes in "Blocked."
 | Agent | Safe Outputs Defined | Enforced in Code |
 |-------|---------------------|-----------------|
 | security | ✅ Yes (above) | Partial (report write is gated) |
-| engineering | ❌ Not yet | — |
-| data | ❌ Not yet | — |
-| legal | ❌ Not yet | — |
+| engineering | ✅ Yes (above) | — |
+| data | ✅ Yes (above) | — |
+| legal | ✅ Yes (above) | — |
 | All others | ❌ Not yet | — |
 
 > **Note**: Currently safe outputs are documented contracts, not runtime-enforced. Future work: add output gating to `extension.mjs` that checks allowed actions before executing.

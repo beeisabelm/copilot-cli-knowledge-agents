@@ -107,7 +107,23 @@ if ($null -eq $checklistDetection) {
 
 Write-Host "🔍 Validating prompt files..." -ForegroundColor Cyan
 
-# YOUR CODE HERE — follow the pattern from Check 2 above
+$promptsDir = Join-Path $ExtensionRoot "prompts"
+$promptDetection = @("architect.md", "attacker.md", "auditor.md", "cross-review.md")
+
+foreach ($prompt in $promptDetection) {
+    $filePath = Join-Path $promptsDir $prompt
+    $exists = Test-Path $filePath -PathType Leaf
+    if ($exists) {
+        Add-Check -Name "Prompt '$prompt' file exists" -Ok $true -Detail $filePath
+        $content = @(Get-Content $filePath)
+        $lineCount = $content.Count
+        if ($lineCount -lt 10) {
+            Add-Warning -Name "Prompt '$prompt'" -Detail "Only $lineCount lines — may be incomplete"
+        }
+    } else {
+        Add-Check -Name "Prompt '$prompt' file exists" -Ok $false -Detail "Missing: $filePath"
+    }
+}
 
 # ─── Check 4: No duplicate trigger keywords across checklists ───────────────
 # <!-- TODO: Junior dev — complete this section -->
@@ -126,7 +142,19 @@ Write-Host "🔍 Validating prompt files..." -ForegroundColor Cyan
 
 Write-Host "🔍 Checking for duplicate triggers..." -ForegroundColor Cyan
 
-# YOUR CODE HERE
+$triggerMap = @{}
+
+foreach ($prop in $checklistDetection.PSObject.Properties) {
+    $triggers = @($prop.Value.triggers)
+    foreach ($keyword in $triggers) {
+        if ($triggerMap.ContainsKey($keyword)) {
+            $duplicate = $triggerMap[$keyword]
+            Add-Warning -Name "Trigger '$keyword'" -Detail "Trigger keyword is duplicated across '$duplicate' and '$($(prop.Name))'"
+        } else {
+            $triggerMap.Add($keyword, $prop.Name)
+        }
+    }
+}
 
 # ─── Check 5: extension.mjs exists ──────────────────────────────────────────
 
