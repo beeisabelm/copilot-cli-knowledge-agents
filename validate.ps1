@@ -92,18 +92,6 @@ if ($null -eq $checklistDetection) {
 }
 
 # ─── Check 3: All prompt files exist ────────────────────────────────────────
-# <!-- TODO: Junior dev — complete this section -->
-# 
-# Required prompts: attacker.md, auditor.md, architect.md, cross-review.md
-# Location: .github/extensions/security/prompts/
-#
-# Pattern to follow (same as checklist check above):
-#   1. Define the expected prompt file names in an array
-#   2. Loop through each one
-#   3. Use Add-Check to verify the file exists
-#   4. Use Add-Warning if the file is suspiciously short (< 10 lines)
-#
-# Hint: $promptsDir = Join-Path $ExtensionRoot "prompts"
 
 Write-Host "🔍 Validating prompt files..." -ForegroundColor Cyan
 
@@ -126,19 +114,6 @@ foreach ($prompt in $promptDetection) {
 }
 
 # ─── Check 4: No duplicate trigger keywords across checklists ───────────────
-# <!-- TODO: Junior dev — complete this section -->
-#
-# If two checklists share the same trigger (e.g., both claim ".py"), a repo
-# scan could load the wrong checklist. Detect and warn about duplicates.
-#
-# Pattern:
-#   1. Build a hashtable: trigger keyword → list of checklist names
-#   2. Loop through checklistDetection entries
-#   3. For each trigger keyword, add to the hashtable
-#   4. After all entries, find any trigger with 2+ checklists
-#   5. Use Add-Warning for each duplicate
-#
-# Hint: $triggerMap = @{}
 
 Write-Host "🔍 Checking for duplicate triggers..." -ForegroundColor Cyan
 

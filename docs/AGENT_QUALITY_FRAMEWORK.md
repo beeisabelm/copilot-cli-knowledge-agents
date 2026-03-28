@@ -31,25 +31,6 @@ Rate each indicator as: ✅ Healthy | ⚠️ Needs Work | ❌ Missing
 **Needs Work:** Some errors are swallowed or produce cryptic messages.\
 **Missing:** Errors crash the agent silently.
 
-<!-- TODO: Junior dev — research and complete indicators 6-10 below.
-
-For each indicator, follow the same format:
-- Name it (short, descriptive)
-- Define "Healthy" (what good looks like)  
-- Define "Needs Work" (partial quality)
-- Define "Missing" (the failure state)
-
-Suggested areas to cover:
-6. **Prompt Quality** — Are role prompts specific enough to produce structured output?
-7. **Output Consistency** — Does the agent produce findings in a parseable format?
-8. **Documentation Completeness** — Does the agent have install steps, examples, troubleshooting?
-9. **Update Mechanism** — Can the agent's knowledge be refreshed without code changes?
-10. **Test Coverage** — Has the agent been validated against a sample repo?
-
-Research what makes a "good" AI agent by looking at the existing security agent
-as the gold standard — it has all 5 indicators above at "Healthy" level.
--->
-
 ### 6. Prompt Quality
 **Healthy:** Behavior is true to description and agent performs all duties fluently and competently.\
 **Needs Work:** Occasionally confused about capabilities and requires some user hand-holding most of the time.\
@@ -78,20 +59,6 @@ as the gold standard — it has all 5 indicators above at "Healthy" level.
 ---
 
 ## Scoring Rubric
-
-<!-- TODO: Junior dev — create a scoring table.
-
-Based on the 10 indicators above, create a table that maps scores to quality levels:
-
-| Score | Label | Criteria |
-|-------|-------|----------|
-| 9-10 Healthy | Gold | ... |
-| 7-8 Healthy | Silver | ... |
-| 5-6 mixed | Bronze | ... |
-| < 5 | Needs Work | ... |
-
-Then apply the rubric to the current security agent as an example.
--->
 Calculate score by taking the summing the points across the 10 health indicators and rounding to the nearest integer (x.33 = x, x.67 = x+1). For each indicator, "Healthy" is 1 point, "Needs Work" is 1/3 (0.33) points, and "Missing" is 0 points.
 
 | Score | Label | Criteria |

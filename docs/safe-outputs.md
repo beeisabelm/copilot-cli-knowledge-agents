@@ -47,21 +47,6 @@ Without output gating, an AI security scanner could:
 
 Safe outputs ensure humans stay in the loop for irreversible actions.
 
-<!-- TODO: Junior dev — add safe-output definitions for 2-3 more agents.
-
-Pick from: engineering, data, legal, product-management, or finance.
-
-For each agent, define:
-- What should be ALLOWED (read-only, display, summarize)
-- What should be GATED (creates files, sends messages, modifies data)
-- What should be BLOCKED (destructive operations, external API calls)
-
-Use the security agent example above as your template.
-
-Think about: what's the worst thing this agent could do if it had no guardrails?
-That's what goes in "Blocked."
--->
-
 ## Engineering Agent
 
 ```
