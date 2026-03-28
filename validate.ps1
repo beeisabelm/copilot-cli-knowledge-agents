@@ -27,25 +27,25 @@ function Add-Check {
     param([string]$Name, [bool]$Ok, [string]$Detail)
     if ($Ok) {
         $script:passed++
-        Write-Verbose "  ✅ $Name"
+        Write-Verbose "  [PASS] $Name"
     } else {
-        $script:errors += "  ❌ $Name — $Detail"
+        $script:errors += "  [FAIL] $Name — $Detail"
     }
 }
 
 function Add-Warning {
     param([string]$Name, [string]$Detail)
-    $script:warnings += "  ⚠️ $Name — $Detail"
+    $script:warnings += "  [WARN] $Name — $Detail"
 }
 
 # ─── Check 1: config.json exists and is valid JSON ──────────────────────────
 
-Write-Host "🔍 Validating config.json..." -ForegroundColor Cyan
+Write-Host "Validating config.json..." -ForegroundColor Cyan
 
 Add-Check -Name "config.json exists" -Ok (Test-Path $ConfigPath) -Detail "Expected at: $ConfigPath"
 
 if (-not (Test-Path $ConfigPath)) {
-    Write-Host "`n❌ Cannot continue — config.json not found." -ForegroundColor Red
+    Write-Host "`n Cannot continue — config.json not found." -ForegroundColor Red
     exit 1
 }
 
@@ -55,13 +55,13 @@ try {
     Add-Check -Name "config.json is valid JSON" -Ok $true -Detail ""
 } catch {
     Add-Check -Name "config.json is valid JSON" -Ok $false -Detail $_.Exception.Message
-    Write-Host "`n❌ Cannot continue — config.json has invalid JSON." -ForegroundColor Red
+    Write-Host "`n Cannot continue — config.json has invalid JSON." -ForegroundColor Red
     exit 1
 }
 
 # ─── Check 2: All checklist files exist ─────────────────────────────────────
 
-Write-Host "🔍 Validating checklist files..." -ForegroundColor Cyan
+Write-Host "Validating checklist files..." -ForegroundColor Cyan
 
 $checklistDetection = $config.checklistDetection
 if ($null -eq $checklistDetection) {
@@ -76,8 +76,10 @@ if ($null -eq $checklistDetection) {
         Add-Check -Name "Checklist '$key' file exists ($($prop.Value.file))" -Ok $exists -Detail "Missing: $filePath"
         
         if ($exists) {
-            $content = Get-Content $filePath -Raw
-            $lineCount = ($content -split "`n").Count
+            $lineCount = (Get-Content $filePath | Measure-Object -Line).Lines
+            if ($null -eq $lineCount) {
+                $lineCount = 0
+            }
             if ($lineCount -lt 3) {
                 Add-Warning -Name "Checklist '$key'" -Detail "Only $lineCount lines — may be incomplete"
             }
@@ -93,7 +95,7 @@ if ($null -eq $checklistDetection) {
 
 # ─── Check 3: All prompt files exist ────────────────────────────────────────
 
-Write-Host "🔍 Validating prompt files..." -ForegroundColor Cyan
+Write-Host "Validating prompt files..." -ForegroundColor Cyan
 
 $promptsDir = Join-Path $ExtensionRoot "prompts"
 $promptDetection = @("architect.md", "attacker.md", "auditor.md", "cross-review.md")
@@ -103,8 +105,10 @@ foreach ($prompt in $promptDetection) {
     $exists = Test-Path $filePath -PathType Leaf
     if ($exists) {
         Add-Check -Name "Prompt '$prompt' file exists" -Ok $true -Detail $filePath
-        $content = @(Get-Content $filePath)
-        $lineCount = $content.Count
+        $lineCount = (Get-Content $filePath | Measure-Object -Line).Lines
+        if ($null -eq $lineCount) {
+            $lineCount = 0
+        }
         if ($lineCount -lt 10) {
             Add-Warning -Name "Prompt '$prompt'" -Detail "Only $lineCount lines — may be incomplete"
         }
@@ -115,7 +119,7 @@ foreach ($prompt in $promptDetection) {
 
 # ─── Check 4: No duplicate trigger keywords across checklists ───────────────
 
-Write-Host "🔍 Checking for duplicate triggers..." -ForegroundColor Cyan
+Write-Host "Checking for duplicate triggers..." -ForegroundColor Cyan
 
 $triggerMap = @{}
 
@@ -124,7 +128,7 @@ foreach ($prop in $checklistDetection.PSObject.Properties) {
     foreach ($keyword in $triggers) {
         if ($triggerMap.ContainsKey($keyword)) {
             $duplicate = $triggerMap[$keyword]
-            Add-Warning -Name "Trigger '$keyword'" -Detail "Trigger keyword is duplicated across '$duplicate' and '$($(prop.Name))'"
+            Add-Warning -Name "Trigger '$keyword'" -Detail "Trigger keyword is duplicated across '$duplicate' and '$($prop.Name)'"
         } else {
             $triggerMap.Add($keyword, $prop.Name)
         }
@@ -133,7 +137,7 @@ foreach ($prop in $checklistDetection.PSObject.Properties) {
 
 # ─── Check 5: extension.mjs exists ──────────────────────────────────────────
 
-Write-Host "🔍 Validating extension..." -ForegroundColor Cyan
+Write-Host "Validating extension..." -ForegroundColor Cyan
 
 $extensionPath = Join-Path $ExtensionRoot "extension.mjs"
 Add-Check -Name "extension.mjs exists" -Ok (Test-Path $extensionPath) -Detail "Missing: $extensionPath"
@@ -144,22 +148,22 @@ Write-Host ""
 Write-Host "━━━ Validation Report ━━━" -ForegroundColor White
 
 if ($passed -gt 0) {
-    Write-Host "  ✅ $passed checks passed" -ForegroundColor Green
+    Write-Host "  [PASS] $passed checks passed" -ForegroundColor Green
 }
 
 if ($warnings.Count -gt 0) {
-    Write-Host "  ⚠️ $($warnings.Count) warnings:" -ForegroundColor Yellow
+    Write-Host "  [WARN] $($warnings.Count) warnings:" -ForegroundColor Yellow
     $warnings | ForEach-Object { Write-Host $_ -ForegroundColor Yellow }
 }
 
 if ($errors.Count -gt 0) {
-    Write-Host "  ❌ $($errors.Count) errors:" -ForegroundColor Red
+    Write-Host "  [FAIL] $($errors.Count) errors:" -ForegroundColor Red
     $errors | ForEach-Object { Write-Host $_ -ForegroundColor Red }
     Write-Host ""
     Write-Host "Fix the errors above and re-run validate.ps1" -ForegroundColor Red
     exit 1
 } else {
     Write-Host ""
-    Write-Host "✅ All checks passed." -ForegroundColor Green
+    Write-Host "[PASS] All checks passed." -ForegroundColor Green
     exit 0
 }
