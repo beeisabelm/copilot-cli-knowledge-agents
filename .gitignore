@@ -2,7 +2,7 @@
 .history/
 
 # Copilot workspace instructions (maintainer-specific)
-.github/copilot-instructions.md
+#.github/copilot-instructions.md
 
 # Anthropic source (cloned separately, tracked via commit hash in agent files)
 anthropic-plugins/
