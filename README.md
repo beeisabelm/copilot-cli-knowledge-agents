@@ -91,6 +91,8 @@ The `security` agent differs from the other 12 — it's an original **extension-
 
 ![Security Council Scan — sample output](docs/sample-scan-output.png)
 
+Related docs: [Finding Quality and FP Traps](docs/FINDING_QUALITY_AND_FP_TRAPS.md) (how to keep scan output credible), [Safe Outputs](docs/safe-outputs.md), [Agent Quality Framework](docs/AGENT_QUALITY_FRAMEWORK.md).
+
 ### How It Works
 
 Four AI models review your code — each with a different job:
